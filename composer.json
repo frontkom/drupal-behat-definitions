@@ -1,0 +1,10 @@
+{
+  "name": "frontkom/drupal-behat-definitions",
+  "description": "Useful Behat things we use for Drupal",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Frontkom\\DrupalBehatDefinitions\\": "src/"
+    }
+  }
+}
