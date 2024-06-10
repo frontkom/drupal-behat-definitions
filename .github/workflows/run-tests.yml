@@ -26,6 +26,7 @@ jobs:
     container:
       image: wodby/drupal-php:${{ matrix.php }}
       env:
+        APP_ROOT: /
         COMPOSER_DISCARD_CHANGES: 1
         COMPOSER_MEMORY_LIMIT: -1
         COMPOSER_ALLOW_SUPERUSER: 1
