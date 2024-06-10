@@ -2,6 +2,9 @@
 
 namespace Frontkom\DrupalBehatDefinitions;
 
+/**
+ * Trait to include a step for failing on watchdog messages.
+ */
 trait FailOnWatchDogTrait {
 
   /**

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="frontkom">
+    <description>The coding standard for Frontkom projects.</description>
+    <arg name="extensions" value="inc,install,module,php,profile,test,theme"/>
+
+    <file>./web/modules/custom/this_module</file>
+
+    <exclude-pattern>./web/modules/custom/**/*.css</exclude-pattern>
+    <exclude-pattern>./web/modules/custom/**/node_modules/**</exclude-pattern>
+    <exclude-pattern>./web/modules/custom/**/*.txt</exclude-pattern>
+    <exclude-pattern>./web/modules/custom/**/*.md</exclude-pattern>
+
+    <rule ref="./vendor/drupal/coder/coder_sniffer/Drupal"/>
+</ruleset>
