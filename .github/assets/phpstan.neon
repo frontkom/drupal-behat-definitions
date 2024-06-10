@@ -5,4 +5,4 @@ parameters:
     ignoreErrors:
         # We use this all over the place. Not that straightforward to use the Drupal container inside behat.
         # todo(eirik): Probably a way, investigate at some point.
-        # - "#Drupal calls should be avoided in classes, use dependency injection instead#"
+        - "#Drupal calls should be avoided in classes, use dependency injection instead#"

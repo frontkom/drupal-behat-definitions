@@ -52,7 +52,7 @@ jobs:
       - id: read_composer_json
         run: |
           PACKAGE_NAME=`php -r "echo json_decode(file_get_contents('./web/modules/custom/this_module/composer.json'))->name;"`
-          echo "::set-output name=package_name::$PACKAGE_NAME"
+          echo "{package_name}={$PACKAGE_NAME}" >> $GITHUB_OUTPUT
       - name: Add dev dependencies and repositories
         run: |
           php -r '$moduleComposerJson=json_decode(file_get_contents("./web/modules/custom/this_module/composer.json"),TRUE);$composerJson=json_decode(file_get_contents("./composer.json"),TRUE);$devDependencies=isset($moduleComposerJson["require-dev"])?$moduleComposerJson["require-dev"]:[];$composerJson["require-dev"]=$devDependencies+array_diff_key($composerJson["require-dev"]??[],$devDependencies);$composerJson["repositories"]=array_merge($moduleComposerJson["repositories"]??[], $composerJson["repositories"]);file_put_contents("./composer.json",json_encode($composerJson,JSON_PRETTY_PRINT|JSON_FORCE_OBJECT|JSON_UNESCAPED_SLASHES));'
