@@ -35,11 +35,8 @@ jobs:
       db:
         image: mysql:8.0
     steps:
-      - name: Select the composer version
+      - name: Display the composer version
         run: |
-          composer --version
-          composer self-update
-          composer self-update --${{ matrix.composer }}
           composer --version
       - name: Create project
         run: composer create-project --no-install drupal/recommended-project:${{ matrix.drupal_core_compatibility }} ${GITHUB_WORKSPACE}
