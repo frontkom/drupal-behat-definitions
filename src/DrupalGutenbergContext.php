@@ -5,13 +5,23 @@ namespace Frontkom\DrupalBehatDefinitions;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 
+/**
+ * Some steps to use with Drupal Gutenberg.
+ */
 class DrupalGutenbergContext extends RawDrupalContext {
 
+  /**
+   * Get the text format to use.
+   *
+   * This is to make it possible to override in a subclass.
+   */
   protected function getTextFormat() {
-
+    return 'gutenberg';
   }
 
   /**
+   * Step to write in a gutenberg field.
+   *
    * @Then I create gutenberg content from file :file in :entity_type with title :title and field name :field_name
    * @Then I create gutenberg content from file :file in content :title and field name :field_name
    * @Then I create gutenberg content from file :file in content :title
