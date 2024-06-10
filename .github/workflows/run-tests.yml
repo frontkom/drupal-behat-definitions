@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     container:
-      image: nymediaas/php:${{ matrix.php }}-cli
+      image: wodby/drupal-php:${{ matrix.php }}
       env:
         COMPOSER_DISCARD_CHANGES: 1
         COMPOSER_MEMORY_LIMIT: -1
