@@ -2,7 +2,7 @@
 
 namespace Frontkom\DrupalBehatDefinitions;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 
 /**
@@ -31,7 +31,7 @@ class DrupalGutenbergContext extends RawDrupalContext {
     $definition = \Drupal::entityTypeManager()->getDefinition($entity_type);
     $entities = $storage->loadByProperties([$definition->getKey('label') => $title]);
     $entity = reset($entities);
-    if (!$entity instanceof EntityInterface) {
+    if (!$entity instanceof FieldableEntityInterface) {
       throw new \Exception("Entity with title $title not found");
     }
     if (!$entity->hasField($field_name)) {
