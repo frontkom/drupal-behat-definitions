@@ -12,21 +12,17 @@ jobs:
         php:
           - 8.1
           - 8.2
-          - 8.3
         drupal_core_compatibility:
           - "^9.0"
           - "^10.0"
         exclude:
           - php: 8.2
             drupal_core_compatibility: "^9.0"
-          - php: 8.3
-            drupal_core_compatibility: "^9.0"
     runs-on: ubuntu-latest
     timeout-minutes: 5
     container:
-      image: wodby/drupal-php:${{ matrix.php }}
+      image: nymediaas/php:${{ matrix.php }}-cli
       env:
-        APP_ROOT: /
         COMPOSER_DISCARD_CHANGES: 1
         COMPOSER_MEMORY_LIMIT: -1
         COMPOSER_ALLOW_SUPERUSER: 1
