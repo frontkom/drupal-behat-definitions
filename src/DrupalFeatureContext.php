@@ -12,6 +12,20 @@ class DrupalFeatureContext extends RawDrupalContext {
   use FailOnWatchDogTrait;
 
   /**
+   * Step to run a post update hook.
+   *
+   * @Then I run the post_update hook :hook from module :module
+   */
+  public function iRunThePostUpdateHookFromModule($hook, $module) {
+    /** @var \Drupal\Core\Extension\ModuleHandler $module_handler */
+    $module_handler = \Drupal::moduleHandler();
+    $module_handler->loadInclude($module, 'php', "$module.post_update");
+    // It's possible to include an argument for "sandbox".
+    $sandbox = [];
+    $hook($sandbox);
+  }
+  
+  /**
    * Helper to visit content.
    *
    * @Then /^I visit the "([^"]*)" content with title "([^"]*)"$/
