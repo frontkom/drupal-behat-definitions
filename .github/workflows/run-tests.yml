@@ -42,7 +42,7 @@ jobs:
       - name: Add test dependencies
         run: |
           composer config --no-plugins allow-plugins true
-          composer require --dev cweagans/composer-patches:^1.5.0 mglaman/phpstan-drupal phpstan/phpstan-deprecation-rules phpstan/phpstan-phpunit drupal/core-dev:${{ matrix.drupal_core_compatibility }}
+          composer require --dev phpstan/extension-installer cweagans/composer-patches:^1.5.0 mglaman/phpstan-drupal phpstan/phpstan-deprecation-rules phpstan/phpstan-phpunit drupal/core-dev:${{ matrix.drupal_core_compatibility }}
           composer config extra.enable-patching true
       - uses: actions/checkout@v2
         with:
