@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="ny_media_as">
+<ruleset name="frontkom">
     <description>The coding standard for Frontkom projects.</description>
     <arg name="extensions" value="inc,install,module,php,profile,test,theme"/>
 
