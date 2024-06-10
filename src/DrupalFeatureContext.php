@@ -24,7 +24,7 @@ class DrupalFeatureContext extends RawDrupalContext {
     $sandbox = [];
     $hook($sandbox);
   }
-  
+
   /**
    * Helper to visit content.
    *
