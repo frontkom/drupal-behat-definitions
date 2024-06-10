@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+         backupGlobals="false"
+         colors="true"
+         bootstrap="web/core/tests/bootstrap.php"
+         verbose="true"
+>
+    <testsuites>
+        <testsuite name="frontkom tests">
+            <directory>./web/modules/custom/**/tests</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <log type="coverage-html" target="web/data/tmp/coverage"
+             lowUpperBound="35" highLowerBound="70" />
+        <log type="coverage-clover" target="web/data/tmp/coverage.xml" />
+    </logging>
+</phpunit>

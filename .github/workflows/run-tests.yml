@@ -1,0 +1,82 @@
+name: Test
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: Run tests
+    strategy:
+      fail-fast: false
+      matrix:
+        php:
+          - 8.1
+          - 8.2
+          - 8.3
+        drupal_core_compatibility:
+          - "^9.0"
+          - "^10.0"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container:
+      image: nymediaas/php:${{ matrix.php }}-cli
+      env:
+        COMPOSER_DISCARD_CHANGES: 1
+        COMPOSER_MEMORY_LIMIT: -1
+        COMPOSER_ALLOW_SUPERUSER: 1
+        COMPOSER_EXIT_ON_PATCH_FAILURE: 1
+        SIMPLETEST_DB: mysql://root:root@db/mydb
+    services:
+      db:
+        image: mysql:8.0
+    steps:
+      - name: Select the composer version
+        run: |
+          composer --version
+          composer self-update
+          composer self-update --${{ matrix.composer }}
+          composer --version
+      - name: Create project
+        run: composer create-project --no-install drupal/recommended-project:${{ matrix.drupal_core_compatibility }} ${GITHUB_WORKSPACE}
+      - name: Set minimum stability to dev
+        run: php -r '$composerJson=json_decode(file_get_contents("./composer.json"),TRUE);$composerJson["minimum-stability"]="dev";file_put_contents("./composer.json",json_encode($composerJson,JSON_PRETTY_PRINT|JSON_FORCE_OBJECT|JSON_UNESCAPED_SLASHES));'
+      - name: Add test dependencies
+        run: |
+          composer config --no-plugins allow-plugins true
+          composer require --dev cweagans/composer-patches:^1.5.0 mglaman/phpstan-drupal phpstan/phpstan-deprecation-rules phpstan/phpstan-phpunit drupal/core-dev:${{ matrix.drupal_core_compatibility }}
+          composer config extra.enable-patching true
+      - uses: actions/checkout@v2
+        with:
+          path: web/modules/custom/this_module
+      - name: Copy test assets
+        run: cp web/modules/custom/this_module/.github/assets/* ./
+      - id: read_composer_json
+        run: |
+          PACKAGE_NAME=`php -r "echo json_decode(file_get_contents('./web/modules/custom/this_module/composer.json'))->name;"`
+          echo "::set-output name=package_name::$PACKAGE_NAME"
+      - name: Add dev dependencies and repositories
+        run: |
+          php -r '$moduleComposerJson=json_decode(file_get_contents("./web/modules/custom/this_module/composer.json"),TRUE);$composerJson=json_decode(file_get_contents("./composer.json"),TRUE);$devDependencies=isset($moduleComposerJson["require-dev"])?$moduleComposerJson["require-dev"]:[];$composerJson["require-dev"]=$devDependencies+array_diff_key($composerJson["require-dev"]??[],$devDependencies);$composerJson["repositories"]=array_merge($moduleComposerJson["repositories"]??[], $composerJson["repositories"]);file_put_contents("./composer.json",json_encode($composerJson,JSON_PRETTY_PRINT|JSON_FORCE_OBJECT|JSON_UNESCAPED_SLASHES));'
+          cat composer.json
+          composer update -vv
+      - name: Merge autoload-dev
+        run: |
+          php -r '$moduleComposerJson=json_decode(file_get_contents("./web/modules/custom/this_module/composer.json"),TRUE);$composerJson=json_decode(file_get_contents("./composer.json"),TRUE);$autoloadDev=isset($moduleComposerJson["autoload-dev-actions"])?$moduleComposerJson["autoload-dev-actions"]:[];$composerJson["autoload-dev"]=$autoloadDev+array_diff_key($composerJson["autoload-dev"]??[],$autoloadDev);file_put_contents("./composer.json",json_encode($composerJson,JSON_PRETTY_PRINT|JSON_FORCE_OBJECT|JSON_UNESCAPED_SLASHES));'
+          cat composer.json
+          composer update -vv
+      - name: Add module's repository to project's repository list
+        run: |
+          composer config repositories.local path web/modules/custom/this_module
+          composer require ${{ steps.read_composer_json.outputs.package_name }}:@dev
+      # Next step may fail if phpunit < 9 is used. That's ok.
+      - name: Add phpspec/prophecy-phpunit if needed
+        run: composer require phpspec/prophecy-phpunit:^2
+        continue-on-error: true
+      - name: Ensure all dependencies are installed
+        run: composer install
+      - name: Run PHPCS
+        run: ./vendor/bin/phpcs -p -n
+      - name: Run PHPUNIT
+        run: ./vendor/bin/phpunit
+      - name: Run PHPSTAN
+        run: ./vendor/bin/phpstan analyse
