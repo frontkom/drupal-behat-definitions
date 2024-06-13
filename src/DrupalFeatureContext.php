@@ -2,6 +2,7 @@
 
 namespace Frontkom\DrupalBehatDefinitions;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 
 /**
@@ -75,6 +76,9 @@ class DrupalFeatureContext extends RawDrupalContext {
       throw new \Exception("Multiple $entity_type found with title $title");
     }
     $entity = reset($entities);
+    if (!$entity instanceof FieldableEntityInterface) {
+      throw new \Exception("Entity is not a fieldable entity");
+    }
     $file = $this->createFile($file_name);
     $entity->set($field, $file);
     $entity->save();
