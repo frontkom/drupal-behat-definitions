@@ -42,6 +42,21 @@ class DrupalFeatureContext extends RawDrupalContext {
   }
 
   /**
+   * Helper to edit content.
+   *
+   * @Then /^I edit the "([^"]*)" content with title "([^"]*)"$/
+   * @Then /^I edit the "([^"]*)" content with title "([^"]*)" in language "([^"]*)"$/
+   */
+  public function editContentByTitle($type, $title, $language = NULL) {
+    $nid = $this->getContentNid($title, $type);
+    $address = 'node/' . $nid . '/edit';
+    if ($language) {
+      $address = "$language/node/$nid/edit";
+    }
+    $this->getSession()->visit($this->locatePath($address));
+  }
+
+  /**
    * Helper to get content nid.
    */
   public function getContentNid($title, $type) {
