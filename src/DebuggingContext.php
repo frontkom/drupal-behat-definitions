@@ -1,6 +1,6 @@
 <?php
 
-namespace Frontkom\CommonBehatDefinitions;
+namespace Frontkom\DrupalBehatDefinitions;
 
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Drupal\DrupalExtension\Context\RawDrupalContext;
