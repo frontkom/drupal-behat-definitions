@@ -20,13 +20,13 @@ class CommerceContext extends RawDrupalContext {
    * @Given coupons:
    */
   public function createCoupons(TableNode $nodesTable) {
+    $storage = \Drupal::entityTypeManager()->getStorage('commerce_promotion_coupon');
     foreach ($nodesTable->getHash() as $nodeHash) {
       $coupon = (object) $nodeHash;
-      /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
       $promotion = $this->getPromotionByName($coupon->promotion);
       if ($promotion) {
         $coupon_saved = $this->couponCreate($coupon);
-        $coupon_loaded = Coupon::load($coupon_saved->id);
+        $coupon_loaded = $storage->load($coupon_saved->id);
         $promotion->get('coupons')->appendItem($coupon_loaded);
         $promotion->save();
       }
@@ -39,9 +39,10 @@ class CommerceContext extends RawDrupalContext {
   /**
    * Load promotion by name.
    */
-  public function getPromotionByName($promotion_name) {
+  public function getPromotionByName($promotion_name): ?PromotionInterface {
+    $storage = \Drupal::entityTypeManager()->getStorage('commerce_promotion');
     foreach ($this->promotions as $promotion) {
-      $loaded_promotion = Promotion::load($promotion->id);
+      $loaded_promotion = $storage->load($promotion->id);
       if ($loaded_promotion->label() === $promotion_name) {
         return $loaded_promotion;
       }
