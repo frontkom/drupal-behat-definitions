@@ -92,9 +92,11 @@ class CommerceContext extends RawDrupalContext {
   }
 
   /**
+   * Check if product variation exist.
+   *
    * @Then /^a product with SKU "([^"]*)" should exist$/
    */
-  public function aProductWithSKUShouldExist($sku) {
+  public function aProductWithSkuShouldExist($sku) {
     /** @var \Drupal\commerce_product\ProductVariationStorage $variation_storage */
     $variation_storage = \Drupal::entityTypeManager()->getStorage('commerce_product_variation');
     $product_variations = $variation_storage->loadBySku($sku);
@@ -104,6 +106,10 @@ class CommerceContext extends RawDrupalContext {
   }
 
   /**
+   * Set records DB for exchange rates.
+   *
+   * Valid for commerce_exchanger^2, because in version 1 the exchange rates are in config.
+   *
    * @Given I set :value exchange rates
    */
   public function setManualExchangeRates($value) {
