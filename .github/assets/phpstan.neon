@@ -6,7 +6,7 @@ parameters:
         # We use this all over the place. Not that straightforward to use the Drupal container inside behat.
         # todo(eirik): Probably a way, investigate at some point.
         - "#Drupal calls should be avoided in classes, use dependency injection instead#"
-		-
-		  message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:\\:loadBySku\\(\\)\\.$#"
-		  count: 1
-		  path: web/modules/custom/this_module/src/CommerceContext.php
+        -
+          message: "#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:\\:loadBySku\\(\\)\\.$#"
+          count: 1
+          path: web/modules/custom/this_module/src/CommerceContext.php
