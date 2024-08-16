@@ -37,7 +37,7 @@ class CommerceContext extends RawDrupalContext {
   /**
    * Load promotion by name.
    */
-  public function getPromotionByName($promotion_name): {
+  public function getPromotionByName($promotion_name) {
     $storage = \Drupal::entityTypeManager()->getStorage('commerce_promotion');
     foreach ($this->promotions as $promotion) {
       $loaded_promotion = $storage->load($promotion->id);
