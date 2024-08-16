@@ -13,6 +13,13 @@ use Drupal\DrupalExtension\Context\RawDrupalContext;
 class CommerceContext extends RawDrupalContext {
 
   /**
+   * An array of promotions created during this context.
+   *
+   * @var array
+   */
+  protected $promotions = [];
+
+  /**
    * Generate coupons.
    *
    * @Given coupons:
@@ -96,7 +103,6 @@ class CommerceContext extends RawDrupalContext {
    * @Then /^a product with SKU "([^"]*)" should exist$/
    */
   public function aProductWithSkuShouldExist($sku) {
-    /** @var \Drupal\commerce_product\ProductVariationStorage $variation_storage */
     $variation_storage = \Drupal::entityTypeManager()->getStorage('commerce_product_variation');
     $product_variations = $variation_storage->loadBySku($sku);
     if (empty($product_variations)) {
