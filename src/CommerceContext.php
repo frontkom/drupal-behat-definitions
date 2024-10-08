@@ -4,6 +4,7 @@ namespace Frontkom\DrupalBehatDefinitions;
 
 use Behat\Gherkin\Node\TableNode;
 use Drupal\commerce_product\ProductVariationStorageInterface;
+use Drupal\commerce_promotion\Entity\PromotionInterface;
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 
 /**
@@ -71,6 +72,7 @@ class CommerceContext extends RawDrupalContext {
    * @Then I visit promotion :title edit page
    */
   public function iVisitPromotionEditPage($title) {
+    /** @var \Drupal\commerce_promotion\Entity\PromotionInterface[] $promotions */
     $promotions = \Drupal::entityTypeManager()->getStorage('commerce_promotion')
       ->loadByProperties([
         'name' => $title,
@@ -79,8 +81,8 @@ class CommerceContext extends RawDrupalContext {
       throw new \Exception('Expected 1 promotion with title ' . $title . ' but found ' . count($promotions));
     }
 
-    $id = reset($promotions)->id();
-    $this->getSession()->visit($this->locatePath("promotion/$id/edit"));
+    $promotion = reset($promotions);
+    $this->getSession()->visit($this->locatePath($promotion->toUrl('edit-form')->toString()));
   }
 
   /**
