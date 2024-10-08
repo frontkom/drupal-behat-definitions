@@ -2,6 +2,8 @@
 
 namespace Frontkom\DrupalBehatDefinitions;
 
+use Drupal\Component\Render\FormattableMarkup;
+
 /**
  * Trait to include a step for failing on watchdog messages.
  */
@@ -44,7 +46,16 @@ trait FailOnWatchDogTrait {
       // class will only live the rest of the step, and not until the next
       // scenario.
       \Drupal::state()->set(self::LAST_WATCHDOG_TIME, time());
-      throw new \Exception('Found a PHP warning/notice or similar. The message was: ' . $msg->message);
+      $arguments = [];
+      try {
+        $arguments = unserialize($msg->variables);
+      }
+      catch (\Throwable $e) {
+        // Do nothing. We already have an empty array as arguments, and let's
+        // hope that will be enough?
+      }
+      $message = new FormattableMarkup($msg->message, $arguments);
+      throw new \Exception('Found a PHP warning/notice or similar. The message was: ' . (string) $message);
     }
   }
 
