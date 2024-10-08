@@ -12,14 +12,7 @@ use Drupal\DrupalExtension\Context\RawDrupalContext;
  *
  * Provide Behat step-definitions for common Commerce functionalities.
  */
-class CommerceContext extends RawDrupalContext {
-
-  /**
-   * An array of promotions created during this context.
-   *
-   * @var array
-   */
-  protected $promotions = [];
+class CommerceContext extends EntityContextBase {
 
   /**
    * Generate coupons.
@@ -31,15 +24,11 @@ class CommerceContext extends RawDrupalContext {
     foreach ($nodesTable->getHash() as $nodeHash) {
       $coupon = (object) $nodeHash;
       $promotion = $this->getPromotionByName($coupon->promotion);
-      if ($promotion) {
-        $coupon_saved = $this->couponCreate($coupon);
-        $coupon_loaded = $storage->load($coupon_saved->id);
-        $promotion->get('coupons')->appendItem($coupon_loaded);
-        $promotion->save();
-      }
-      else {
-        throw new \Exception("No parent promotion found.");
-      }
+
+      $coupon_saved = $this->couponCreate($coupon);
+      $coupon_loaded = $storage->load($coupon_saved->id);
+      $promotion->get('coupons')->appendItem($coupon_loaded);
+      $promotion->save();
     }
   }
 
@@ -48,14 +37,13 @@ class CommerceContext extends RawDrupalContext {
    */
   public function getPromotionByName($promotion_name) {
     $storage = \Drupal::entityTypeManager()->getStorage('commerce_promotion');
-    foreach ($this->promotions as $promotion) {
-      $loaded_promotion = $storage->load($promotion->id);
-      if ($loaded_promotion->label() === $promotion_name) {
-        return $loaded_promotion;
-      }
+    $promotions = $storage->loadByProperties(['name' => $promotion_name]);
+
+    if (count($promotions) !== 1) {
+      throw new \Exception('Expected 1 promotion with title ' . $title . ' but found ' . count($promotions));
     }
 
-    return NULL;
+    return reset($promotions);
   }
 
   /**
@@ -69,19 +57,10 @@ class CommerceContext extends RawDrupalContext {
   /**
    * Visit promotion edit page.
    *
-   * @Then I visit promotion :title edit page
+   * @Then I visit promotion :name edit page
    */
-  public function iVisitPromotionEditPage($title) {
-    /** @var \Drupal\commerce_promotion\Entity\PromotionInterface[] $promotions */
-    $promotions = \Drupal::entityTypeManager()->getStorage('commerce_promotion')
-      ->loadByProperties([
-        'name' => $title,
-      ]);
-    if (count($promotions) !== 1) {
-      throw new \Exception('Expected 1 promotion with title ' . $title . ' but found ' . count($promotions));
-    }
-
-    $promotion = reset($promotions);
+  public function iVisitPromotionEditPage($name) {
+    $promotion = $this->getPromotionByName($name);
     $this->getSession()->visit($this->locatePath($promotion->toUrl('edit-form')->toString()));
   }
 
