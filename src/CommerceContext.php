@@ -3,6 +3,7 @@
 namespace Frontkom\DrupalBehatDefinitions;
 
 use Behat\Gherkin\Node\TableNode;
+use Drupal\commerce_product\ProductVariationStorageInterface;
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 
 /**
@@ -103,6 +104,7 @@ class CommerceContext extends RawDrupalContext {
    * @Then /^a product with SKU "([^"]*)" should exist$/
    */
   public function aProductWithSkuShouldExist($sku) {
+    /** @var \Drupal\commerce_product\ProductVariationStorageInterface $variation_storage */
     $variation_storage = \Drupal::entityTypeManager()->getStorage('commerce_product_variation');
     $product_variations = $variation_storage->loadBySku($sku);
     if (empty($product_variations)) {
