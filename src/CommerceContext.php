@@ -35,12 +35,12 @@ class CommerceContext extends EntityContextBase {
   /**
    * Load promotion by name.
    */
-  public function getPromotionByName($promotion_name) {
+  public function getPromotionByName($name) {
     $storage = \Drupal::entityTypeManager()->getStorage('commerce_promotion');
-    $promotions = $storage->loadByProperties(['name' => $promotion_name]);
+    $promotions = $storage->loadByProperties(['name' => $name]);
 
     if (count($promotions) !== 1) {
-      throw new \Exception('Expected 1 promotion with title ' . $title . ' but found ' . count($promotions));
+      throw new \Exception('Expected 1 promotion with title ' . $name . ' but found ' . count($promotions));
     }
 
     return reset($promotions);
@@ -62,21 +62,6 @@ class CommerceContext extends EntityContextBase {
   public function iVisitPromotionEditPage($name) {
     $promotion = $this->getPromotionByName($name);
     $this->getSession()->visit($this->locatePath($promotion->toUrl('edit-form')->toString()));
-  }
-
-  /**
-   * Remove promotions by titles.
-   *
-   * @Then I remove promotions :titles
-   */
-  public function iRemovePromotions($titles) {
-    $promotions = \Drupal::entityTypeManager()->getStorage('commerce_promotion')
-      ->loadByProperties([
-        'name' => explode(', ', $titles),
-      ]);
-    foreach ($promotions as $promotion) {
-      $promotion->delete();
-    }
   }
 
   /**
