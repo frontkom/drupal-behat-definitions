@@ -3,9 +3,9 @@
 namespace Frontkom\DrupalBehatDefinitions;
 
 use Behat\Gherkin\Node\TableNode;
+use Drupal\DrupalExtension\Context\RawDrupalContext;
 use Drupal\commerce_product\ProductVariationStorageInterface;
 use Drupal\commerce_promotion\Entity\PromotionInterface;
-use Drupal\DrupalExtension\Context\RawDrupalContext;
 
 /**
  * Class CommerceContext.
