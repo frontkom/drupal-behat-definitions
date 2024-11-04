@@ -36,7 +36,7 @@ class UserContext extends RawDrupalContext {
   /**
    * Helper to get user ID.
    */
-  private function getUserIdByMail($mail) {
+  public function getUserIdByMail($mail) {
     $users = \Drupal::entityTypeManager()->getStorage('user')
       ->getQuery()
       ->condition('mail', $mail)
