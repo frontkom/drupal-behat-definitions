@@ -1,6 +1,10 @@
 # drupal-behat-definitions
 Useful Behat things we use for Drupal
 
+[![Test](https://github.com/frontkom/drupal-behat-definitions/actions/workflows/run-tests.yml/badge.svg)](https://github.com/frontkom/drupal-behat-definitions/actions/workflows/run-tests.yml)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/frontkom/drupal-behat-definitions)](https://packagist.org/packages/frontkom/drupal-behat-definitions)
+
+
 ## Installation
 
 ```bash
